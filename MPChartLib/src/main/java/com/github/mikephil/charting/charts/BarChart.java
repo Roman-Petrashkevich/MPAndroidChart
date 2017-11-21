@@ -36,6 +36,11 @@ public class BarChart extends BarLineChartBase<BarData> implements BarDataProvid
      */
     private boolean mDrawBarShadow = false;
 
+    /**
+     * flag that indicates whether the BarChart clips it to zero or ViewPort's bottom
+     */
+    protected boolean mClipToViewPortBottom = false;
+
     private boolean mFitBars = false;
 
     public BarChart(Context context) {
@@ -206,6 +211,23 @@ public class BarChart extends BarLineChartBase<BarData> implements BarDataProvid
     @Override
     public boolean isHighlightFullBarEnabled() {
         return mHighlightFullBarEnabled;
+    }
+
+    /**
+     * @return returns whether the BarChart will be start from zero or ViewPort's actual bottom
+     */
+    @Override
+    public boolean isClipToViewPortBottomEnabled() {
+        return mClipToViewPortBottom;
+    }
+
+    /**
+     * Set this to true to make the BarChart clip to to the bottom of the ViewPort
+     * instead of zero line of YAxis
+     * @param enabled
+     */
+    public void setClipToViewPortBottomEnabled(boolean enabled) {
+        this.mClipToViewPortBottom = enabled;
     }
 
     /**

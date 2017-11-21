@@ -3,6 +3,7 @@ package com.github.mikephil.charting.renderer;
 
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.LinearGradient;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
@@ -15,6 +16,7 @@ import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.highlight.Range;
 import com.github.mikephil.charting.interfaces.dataprovider.BarDataProvider;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
+import com.github.mikephil.charting.utils.GradientColor;
 import com.github.mikephil.charting.utils.MPPointF;
 import com.github.mikephil.charting.utils.Transformer;
 import com.github.mikephil.charting.utils.Utils;
@@ -143,7 +145,7 @@ public class BarChartRenderer extends BarLineScatterCandleBubbleRenderer {
 
         trans.pointValuesToPixel(buffer.buffer);
 
-        final boolean isSingleColor = dataSet.getColors().size() == 1;
+        final boolean isSingleColor = !dataSet.shouldUseGradients() && dataSet.getColors().size() == 1;
 
         if (isSingleColor) {
             mRenderPaint.setColor(dataSet.getColor());
@@ -157,10 +159,22 @@ public class BarChartRenderer extends BarLineScatterCandleBubbleRenderer {
             if (!mViewPortHandler.isInBoundsRight(buffer.buffer[j]))
                 break;
 
+            // Clip to ViewPort's actual bottom if the parameter is set
+            if (mChart.isClipToViewPortBottomEnabled()) {
+                buffer.buffer[j + 3] = mViewPortHandler.contentBottom();
+            }
+
             if (!isSingleColor) {
                 // Set the color for the currently drawn value. If the index
                 // is out of bounds, reuse colors.
                 mRenderPaint.setColor(dataSet.getColor(j / 4));
+
+                if (dataSet.shouldUseGradients()) {
+                    GradientColor gradient = dataSet.getGradient(j/4);
+                    mRenderPaint.setShader(
+                            new LinearGradient(0, buffer.buffer[j + 1], 0, buffer.buffer[j + 3],
+                            gradient.getEndColor(), gradient.getStartColor(), gradient.getTileMode()));
+                }
             }
 
             c.drawRect(buffer.buffer[j], buffer.buffer[j + 1], buffer.buffer[j + 2],

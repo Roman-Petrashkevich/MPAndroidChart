@@ -1,6 +1,9 @@
 package com.github.mikephil.charting.interfaces.datasets;
 
 import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.utils.GradientColor;
+
+import java.util.List;
 
 /**
  * Created by philipp on 21/10/15.
@@ -61,4 +64,41 @@ public interface IBarDataSet extends IBarLineScatterCandleBubbleDataSet<BarEntry
      * @return
      */
     String[] getStackLabels();
+
+    /**
+     * Returns the list of gradients to be used for coloring the data bars.
+     *
+     * @return
+     */
+    public List<GradientColor> getGradients();
+
+    /**
+     * Get gradient by index.
+     *
+     * @param index
+     * @return
+     */
+    public GradientColor getGradient(int index);
+
+    /**
+     * Sets the gradients to be used instead of regular colors,
+     * if the corresponding option is enabled for the DataSet.
+     *
+     * @param gradients
+     */
+    public void setGradients(List<GradientColor> gradients);
+
+    /**
+     * Returns whether gradients should be used instead of regular colors.
+     *
+     * @return
+     */
+    public boolean shouldUseGradients();
+
+    /**
+     * Sets whether gradients should be used instead of regular colors. Default: false
+     *
+     * @param useGradients
+     */
+    public void setUseGradients(boolean useGradients);
 }

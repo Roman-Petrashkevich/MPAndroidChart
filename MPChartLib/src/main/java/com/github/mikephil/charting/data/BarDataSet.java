@@ -4,6 +4,7 @@ package com.github.mikephil.charting.data;
 import android.graphics.Color;
 
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
+import com.github.mikephil.charting.utils.GradientColor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +25,16 @@ public class BarDataSet extends BarLineScatterCandleBubbleDataSet<BarEntry> impl
     private float mBarBorderWidth = 0.0f;
 
     private int mBarBorderColor = Color.BLACK;
+
+    /**
+     * the colours used for gradient colored bars
+     */
+    private List<GradientColor> mGradients;
+
+    /**
+    * the variable that controls whether simple colors or gradients are used to paint the bars
+    */
+    private boolean mUseGradients = false;
 
     /**
      * the alpha value used to draw the highlight indicator bar
@@ -234,5 +245,42 @@ public class BarDataSet extends BarLineScatterCandleBubbleDataSet<BarEntry> impl
     @Override
     public String[] getStackLabels() {
         return mStackLabels;
+    }
+
+    public List<GradientColor> getGradients() {
+        return mGradients;
+    }
+
+    @Override
+    public GradientColor getGradient(int index) {
+        if (mGradients != null && mGradients.size() > 0) {
+            int realIndex = index % mGradients.size();
+            return mGradients.get(realIndex);
+        }
+
+        return null;
+    }
+
+    /**
+     * Sets the gradients to be used instead of regular colors,
+     * if the corresponding option is enabled for the DataSet.
+     *
+     * @param gradients
+     */
+    public void setGradients(List<GradientColor> gradients) {
+        this.mGradients = gradients;
+    }
+
+    public boolean shouldUseGradients() {
+        return mUseGradients && mGradients != null && mGradients.size() > 0;
+    }
+
+    /**
+     * Sets whether gradients should be used instead of regular colors. Default: false
+     *
+     * @param useGradients
+     */
+    public void setUseGradients(boolean useGradients) {
+        this.mUseGradients = useGradients;
     }
 }

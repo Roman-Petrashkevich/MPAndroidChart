@@ -393,6 +393,11 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
      */
     private boolean mOffsetsCalculated = false;
 
+    /**
+     * flag indicating the axises layer depth
+     */
+    protected boolean mDrawAxisOnTopOfData = false;
+
     @Override
     protected void onDraw(Canvas canvas) {
         // super.onDraw(canvas);
@@ -1761,5 +1766,20 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
      */
     public void setUnbindEnabled(boolean enabled) {
         this.mUnbind = enabled;
+    }
+
+
+    /**
+     * If this is set to true, the axises are drawn on top of the actual data,
+     * otherwise they are drawn behind it. Default: false
+     *
+     * @param enabled
+     */
+    public void setDrawAxisOnTopOfData(boolean enabled) {
+        mDrawAxisOnTopOfData = enabled;
+    }
+
+    public boolean isDrawAxisOnTopOfDataEnabled() {
+        return mDrawAxisOnTopOfData;
     }
 }

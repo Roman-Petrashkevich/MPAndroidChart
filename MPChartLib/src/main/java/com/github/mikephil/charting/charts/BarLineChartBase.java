@@ -208,13 +208,15 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
         if (mXAxis.isEnabled())
             mXAxisRenderer.computeAxis(mXAxis.mAxisMinimum, mXAxis.mAxisMaximum, false);
 
-        mXAxisRenderer.renderAxisLine(canvas);
-        mAxisRendererLeft.renderAxisLine(canvas);
-        mAxisRendererRight.renderAxisLine(canvas);
+        if (!isDrawAxisOnTopOfDataEnabled()) {
+            mXAxisRenderer.renderAxisLine(canvas);
+            mAxisRendererLeft.renderAxisLine(canvas);
+            mAxisRendererRight.renderAxisLine(canvas);
 
-        mXAxisRenderer.renderGridLines(canvas);
-        mAxisRendererLeft.renderGridLines(canvas);
-        mAxisRendererRight.renderGridLines(canvas);
+            mXAxisRenderer.renderGridLines(canvas);
+            mAxisRendererLeft.renderGridLines(canvas);
+            mAxisRendererRight.renderGridLines(canvas);
+        }
 
         if (mXAxis.isEnabled() && mXAxis.isDrawLimitLinesBehindDataEnabled())
             mXAxisRenderer.renderLimitLines(canvas);
@@ -239,6 +241,16 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
         canvas.restoreToCount(clipRestoreCount);
 
         mRenderer.drawExtras(canvas);
+
+        if (isDrawAxisOnTopOfDataEnabled()) {
+            mXAxisRenderer.renderAxisLine(canvas);
+            mAxisRendererLeft.renderAxisLine(canvas);
+            mAxisRendererRight.renderAxisLine(canvas);
+
+            mXAxisRenderer.renderGridLines(canvas);
+            mAxisRendererLeft.renderGridLines(canvas);
+            mAxisRendererRight.renderGridLines(canvas);
+        }
 
         if (mXAxis.isEnabled() && !mXAxis.isDrawLimitLinesBehindDataEnabled())
             mXAxisRenderer.renderLimitLines(canvas);
