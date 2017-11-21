@@ -25,6 +25,8 @@ import com.xxmassdeveloper.mpchartexample.CombinedChartActivity;
 import com.xxmassdeveloper.mpchartexample.CubicLineChartActivity;
 import com.xxmassdeveloper.mpchartexample.DynamicalAddingActivity;
 import com.xxmassdeveloper.mpchartexample.FilledLineActivity;
+import com.xxmassdeveloper.mpchartexample.GenieSingleBarActivity;
+import com.xxmassdeveloper.mpchartexample.GenieWeeklyBarActivity;
 import com.xxmassdeveloper.mpchartexample.HalfPieChartActivity;
 import com.xxmassdeveloper.mpchartexample.HorizontalBarChartActivity;
 import com.xxmassdeveloper.mpchartexample.InvertedLineChartActivity;
@@ -146,6 +148,12 @@ public class MainActivity extends Activity implements OnItemClickListener {
         objects.add(new ContentItem(
                 "Half PieChart",
                 "This demonstrates how to create a 180 degree PieChart."));
+        objects.add(new ContentItem(
+                "Genie Single BarChart",
+                "A BarChart that shows the amount of user's daily steps."));
+        objects.add(new ContentItem(
+                "Genie Weekly BarChart",
+                "A BarChart that shows the amount of user's weekly steps."));
 
         MyAdapter adapter = new MyAdapter(this, objects);
 
@@ -285,6 +293,14 @@ public class MainActivity extends Activity implements OnItemClickListener {
                 break;
             case 31:
                 i = new Intent(this, HalfPieChartActivity.class);
+                startActivity(i);
+                break;
+            case 32:
+                i = new Intent(this, GenieSingleBarActivity.class);
+                startActivity(i);
+                break;
+            case 33:
+                i = new Intent(this, GenieWeeklyBarActivity.class);
                 startActivity(i);
                 break;
 
