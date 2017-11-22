@@ -1,6 +1,7 @@
 
 package com.github.mikephil.charting.renderer;
 
+import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -302,7 +303,7 @@ public class XAxisRenderer extends AxisRenderer {
      * @param c
      */
     @Override
-    public void renderLimitLines(Canvas c) {
+    public void renderLimitLines(Canvas c, Context context) {
 
         List<LimitLine> limitLines = mXAxis.getLimitLines();
 

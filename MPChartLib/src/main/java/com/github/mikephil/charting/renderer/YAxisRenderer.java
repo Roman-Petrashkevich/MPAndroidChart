@@ -1,5 +1,8 @@
 package com.github.mikephil.charting.renderer;
 
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -252,7 +255,7 @@ public class YAxisRenderer extends AxisRenderer {
      * @param c
      */
     @Override
-    public void renderLimitLines(Canvas c) {
+    public void renderLimitLines(Canvas c, Context context) {
 
         List<LimitLine> limitLines = mYAxis.getLimitLines();
 
@@ -298,12 +301,14 @@ public class YAxisRenderer extends AxisRenderer {
             // if drawing the limit-value label is enabled
             if (label != null && !label.equals("")) {
 
-                mLimitLinePaint.setStyle(l.getTextStyle());
-                mLimitLinePaint.setPathEffect(null);
-                mLimitLinePaint.setColor(l.getTextColor());
-                mLimitLinePaint.setTypeface(l.getTypeface());
-                mLimitLinePaint.setStrokeWidth(0.5f);
-                mLimitLinePaint.setTextSize(l.getTextSize());
+                Paint textPaint = new Paint();
+                textPaint.setStyle(l.getTextStyle());
+                textPaint.setPathEffect(null);
+                textPaint.setColor(l.getTextColor());
+                textPaint.setTypeface(l.getTypeface());
+                textPaint.setStrokeWidth(0.5f);
+                textPaint.setTextSize(l.getTextSize());
+                mLimitLinePaint.setStyle(Paint.Style.FILL);
 
                 final float labelLineHeight = Utils.calcTextHeight(mLimitLinePaint, label);
                 float xOffset = Utils.convertDpToPixel(4f) + l.getXOffset();
@@ -316,28 +321,67 @@ public class YAxisRenderer extends AxisRenderer {
                     mLimitLinePaint.setTextAlign(Align.RIGHT);
                     c.drawText(label,
                             mViewPortHandler.contentRight() - xOffset,
-                            pts[1] - yOffset + labelLineHeight, mLimitLinePaint);
+                            pts[1] - yOffset + labelLineHeight, textPaint);
 
                 } else if (position == LimitLine.LimitLabelPosition.RIGHT_BOTTOM) {
 
                     mLimitLinePaint.setTextAlign(Align.RIGHT);
                     c.drawText(label,
                             mViewPortHandler.contentRight() - xOffset,
-                            pts[1] + yOffset, mLimitLinePaint);
+                            pts[1] + yOffset, textPaint);
 
                 } else if (position == LimitLine.LimitLabelPosition.LEFT_TOP) {
 
                     mLimitLinePaint.setTextAlign(Align.LEFT);
                     c.drawText(label,
                             mViewPortHandler.contentLeft() + xOffset,
-                            pts[1] - yOffset + labelLineHeight, mLimitLinePaint);
+                            pts[1] - yOffset + labelLineHeight, textPaint);
 
-                } else {
+                } else if (position == LimitLine.LimitLabelPosition.LEFT_BOTTOM) {
 
                     mLimitLinePaint.setTextAlign(Align.LEFT);
                     c.drawText(label,
                             mViewPortHandler.offsetLeft() + xOffset,
-                            pts[1] + yOffset, mLimitLinePaint);
+                            pts[1] + yOffset, textPaint);
+
+                } else if (position == LimitLine.LimitLabelPosition.IMAGE_CENTER) {
+
+                    Bitmap bitmap = BitmapFactory.decodeResource(
+                            context.getResources(),
+                            l.getImageRes());
+
+                    float screenWidth = mViewPortHandler.contentRight() -
+                            mViewPortHandler.contentLeft() -
+                            mViewPortHandler.offsetLeft() -
+                            mViewPortHandler.offsetRight();
+                    float textWidth = textPaint.measureText(label);
+                    float textHeight = textPaint.getTextSize();
+                    float bitmapWidth = bitmap != null ? bitmap.getWidth() : 0;
+                    float bitmapHeight = bitmap != null ? bitmap.getHeight() : 0;
+                    float labelHeight = Math.max(bitmapHeight, textHeight);
+                    float padding = labelHeight/2;
+
+                    float leftBorder = screenWidth/2 - textWidth/2 - bitmapWidth/2 - xOffset;
+                    float rightBorder = screenWidth/2 + textWidth/2 + bitmapWidth/2 + xOffset;
+
+                    c.drawRect(leftBorder - padding,
+                            pts[1] - labelHeight,
+                            rightBorder + padding,
+                            pts[1] + labelHeight, mLimitLinePaint);
+
+                    if (bitmap != null) {
+                        c.drawBitmap(bitmap,
+                                leftBorder,
+                                pts[1] - bitmapHeight/2, mLimitLinePaint);
+                    }
+
+                    c.drawText(label,
+                            leftBorder + padding + bitmapWidth,
+                            pts[1] + labelHeight/3, textPaint);
+
+                } else if (position == LimitLine.LimitLabelPosition.IMAGE_RIGHT) {
+
+                    // TODO: Draw label on the right below image in the circular frame
                 }
             }
 

@@ -1,6 +1,7 @@
 
 package com.github.mikephil.charting.renderer;
 
+import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.PointF;
 
@@ -63,9 +64,10 @@ public class XAxisRendererRadarChart extends XAxisRenderer {
 	 * XAxis LimitLines on RadarChart not yet supported.
 	 *
 	 * @param c
+     * @param context
 	 */
 	@Override
-	public void renderLimitLines(Canvas c) {
+	public void renderLimitLines(Canvas c, Context context) {
 		// this space intentionally left blank
 	}
 }

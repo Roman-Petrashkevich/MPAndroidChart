@@ -219,13 +219,13 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
         }
 
         if (mXAxis.isEnabled() && mXAxis.isDrawLimitLinesBehindDataEnabled())
-            mXAxisRenderer.renderLimitLines(canvas);
+            mXAxisRenderer.renderLimitLines(canvas, getContext());
 
         if (mAxisLeft.isEnabled() && mAxisLeft.isDrawLimitLinesBehindDataEnabled())
-            mAxisRendererLeft.renderLimitLines(canvas);
+            mAxisRendererLeft.renderLimitLines(canvas, getContext());
 
         if (mAxisRight.isEnabled() && mAxisRight.isDrawLimitLinesBehindDataEnabled())
-            mAxisRendererRight.renderLimitLines(canvas);
+            mAxisRendererRight.renderLimitLines(canvas, getContext());
 
         // make sure the data cannot be drawn outside the content-rect
         int clipRestoreCount = canvas.save();
@@ -253,13 +253,13 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
         }
 
         if (mXAxis.isEnabled() && !mXAxis.isDrawLimitLinesBehindDataEnabled())
-            mXAxisRenderer.renderLimitLines(canvas);
+            mXAxisRenderer.renderLimitLines(canvas, getContext());
 
         if (mAxisLeft.isEnabled() && !mAxisLeft.isDrawLimitLinesBehindDataEnabled())
-            mAxisRendererLeft.renderLimitLines(canvas);
+            mAxisRendererLeft.renderLimitLines(canvas, getContext());
 
         if (mAxisRight.isEnabled() && !mAxisRight.isDrawLimitLinesBehindDataEnabled())
-            mAxisRendererRight.renderLimitLines(canvas);
+            mAxisRendererRight.renderLimitLines(canvas, getContext());
 
         mXAxisRenderer.renderAxisLabels(canvas);
         mAxisRendererLeft.renderAxisLabels(canvas);

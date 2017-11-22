@@ -1,6 +1,7 @@
 
 package com.github.mikephil.charting.renderer;
 
+import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Paint.Align;
@@ -220,7 +221,7 @@ public class YAxisRendererHorizontalBarChart extends YAxisRenderer {
      * @param c
      */
     @Override
-    public void renderLimitLines(Canvas c) {
+    public void renderLimitLines(Canvas c, Context context) {
 
         List<LimitLine> limitLines = mYAxis.getLimitLines();
 

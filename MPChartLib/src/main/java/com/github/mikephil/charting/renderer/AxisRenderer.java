@@ -1,6 +1,7 @@
 
 package com.github.mikephil.charting.renderer;
 
+import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -283,5 +284,5 @@ public abstract class AxisRenderer extends Renderer {
      *
      * @param c
      */
-    public abstract void renderLimitLines(Canvas c);
+    public abstract void renderLimitLines(Canvas c, Context context);
 }

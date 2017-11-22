@@ -4,7 +4,6 @@ package com.github.mikephil.charting.components;
 import android.graphics.Color;
 import android.graphics.DashPathEffect;
 import android.graphics.Paint;
-import android.graphics.Typeface;
 
 import com.github.mikephil.charting.utils.Utils;
 
@@ -32,6 +31,9 @@ public class LimitLine extends ComponentBase {
     /** label string that is drawn next to the limit line */
     private String mLabel = "";
 
+    /** image res to be drawn in the label region */
+    private int mImageRes = -1;
+
     /** the path effect of this LimitLine that makes dashed lines possible */
     private DashPathEffect mDashPathEffect = null;
 
@@ -40,7 +42,7 @@ public class LimitLine extends ComponentBase {
 
     /** enum that indicates the position of the LimitLine label */
     public enum LimitLabelPosition {
-        LEFT_TOP, LEFT_BOTTOM, RIGHT_TOP, RIGHT_BOTTOM
+        LEFT_TOP, LEFT_BOTTOM, RIGHT_TOP, RIGHT_BOTTOM, IMAGE_CENTER, IMAGE_RIGHT
     }
 
     /**
@@ -211,5 +213,22 @@ public class LimitLine extends ComponentBase {
      */
     public String getLabel() {
         return mLabel;
+    }
+
+    /**
+     * Returns the drawable resource for the limit line's label
+     * Default: -1
+     * @return
+     */
+    public int getImageRes() {
+        return mImageRes;
+    }
+
+    /**
+     * Sets the drawable resource for the limit line's label
+     * @param imageRes
+     */
+    public void setImageRes(int imageRes) {
+        this.mImageRes = imageRes;
     }
 }

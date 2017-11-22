@@ -1,8 +1,8 @@
 package com.github.mikephil.charting.renderer;
 
+import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Path;
-import android.graphics.PointF;
 
 import com.github.mikephil.charting.charts.RadarChart;
 import com.github.mikephil.charting.components.LimitLine;
@@ -177,7 +177,7 @@ public class YAxisRendererRadarChart extends YAxisRenderer {
 
     private Path mRenderLimitLinesPathBuffer = new Path();
     @Override
-    public void renderLimitLines(Canvas c) {
+    public void renderLimitLines(Canvas c, Context context) {
 
         List<LimitLine> limitLines = mYAxis.getLimitLines();
 
