@@ -37,7 +37,7 @@ public class GenieSingleBarActivity extends DemoBase {
     private static float CONST_LOWER_BOUND_MULT = -0.1f;
     private static int CONST_GRANULARITY = 1000;
     private static int CONST_GRANULARITY_LABELS = 10000;
-    private static int CONST_ANIMATION_TIME = 1500;
+    private static int CONST_ANIMATION_TIME = 700;
     private static int CONST_FONT_SIZE = 15;
     private static int CONST_LINE_WIDTH = 2;
     private static int CONST_GRID_LENGTH = 32;
@@ -61,6 +61,8 @@ public class GenieSingleBarActivity extends DemoBase {
 
     private void initViews() {
         Typeface boldFont = ResourcesCompat.getFont(this, R.font.gilroy_bold);
+        final float yAxisMax = PARAM_GOAL * CONST_UPPER_BOUND_MULT;
+        int labelsCount = (int)(yAxisMax / CONST_GRANULARITY);
 
         chart.setDrawBarShadow(false);
         chart.setDrawValueAboveBar(false);
@@ -77,9 +79,9 @@ public class GenieSingleBarActivity extends DemoBase {
         chart.animateY(CONST_ANIMATION_TIME);
 
         YAxis leftAxis = chart.getAxisLeft();
-        leftAxis.setLabelCount(10, false);
+        leftAxis.setLabelCount(labelsCount, false);
         leftAxis.setPosition(YAxis.YAxisLabelPosition.INSIDE_CHART);
-        leftAxis.setAxisMaximum(PARAM_GOAL * CONST_UPPER_BOUND_MULT);
+        leftAxis.setAxisMaximum(yAxisMax);
         leftAxis.setAxisMinimum(PARAM_GOAL * CONST_LOWER_BOUND_MULT);
         leftAxis.setGranularity(CONST_GRANULARITY);
         leftAxis.setTypeface(boldFont);
@@ -92,7 +94,13 @@ public class GenieSingleBarActivity extends DemoBase {
         leftAxis.setValueFormatter(new IAxisValueFormatter() {
             @Override
             public String getFormattedValue(float value, AxisBase axis) {
-                return value% CONST_GRANULARITY_LABELS == 0 ? numberFormat.format(value) : "";
+                boolean isLastLabel = value + CONST_GRANULARITY > yAxisMax;
+                boolean isPreLastLabel = value + 2 * CONST_GRANULARITY > yAxisMax && !isLastLabel;
+                boolean isPreviousLabelShown = (value - CONST_GRANULARITY) % CONST_GRANULARITY_LABELS == 0;
+
+                return value % CONST_GRANULARITY_LABELS == 0
+                        || (isPreLastLabel && !isPreviousLabelShown)
+                        ? numberFormat.format(value) : "";
             }
         });
 
