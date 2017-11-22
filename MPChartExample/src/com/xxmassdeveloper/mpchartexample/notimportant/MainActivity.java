@@ -26,7 +26,7 @@ import com.xxmassdeveloper.mpchartexample.CubicLineChartActivity;
 import com.xxmassdeveloper.mpchartexample.DynamicalAddingActivity;
 import com.xxmassdeveloper.mpchartexample.FilledLineActivity;
 import com.xxmassdeveloper.mpchartexample.GenieSingleBarActivity;
-import com.xxmassdeveloper.mpchartexample.GenieWeeklyBarActivity;
+import com.xxmassdeveloper.mpchartexample.GenieMultiBarActivity;
 import com.xxmassdeveloper.mpchartexample.HalfPieChartActivity;
 import com.xxmassdeveloper.mpchartexample.HorizontalBarChartActivity;
 import com.xxmassdeveloper.mpchartexample.InvertedLineChartActivity;
@@ -300,7 +300,7 @@ public class MainActivity extends Activity implements OnItemClickListener {
                 startActivity(i);
                 break;
             case 33:
-                i = new Intent(this, GenieWeeklyBarActivity.class);
+                i = new Intent(this, GenieMultiBarActivity.class);
                 startActivity(i);
                 break;
 

@@ -62,6 +62,7 @@ public class GenieSingleBarActivity extends DemoBase {
     private void initViews() {
         Typeface boldFont = ResourcesCompat.getFont(this, R.font.gilroy_bold);
         final float yAxisMax = PARAM_GOAL * CONST_UPPER_BOUND_MULT;
+        final float yAxisMin = PARAM_GOAL * CONST_LOWER_BOUND_MULT;
         int labelsCount = (int)(yAxisMax / CONST_GRANULARITY);
 
         chart.setDrawBarShadow(false);
@@ -82,7 +83,7 @@ public class GenieSingleBarActivity extends DemoBase {
         leftAxis.setLabelCount(labelsCount, false);
         leftAxis.setPosition(YAxis.YAxisLabelPosition.INSIDE_CHART);
         leftAxis.setAxisMaximum(yAxisMax);
-        leftAxis.setAxisMinimum(PARAM_GOAL * CONST_LOWER_BOUND_MULT);
+        leftAxis.setAxisMinimum(yAxisMin);
         leftAxis.setGranularity(CONST_GRANULARITY);
         leftAxis.setTypeface(boldFont);
         leftAxis.setTextSize(CONST_FONT_SIZE);

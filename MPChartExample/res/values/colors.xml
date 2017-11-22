@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="genie_background_color">#1D3A3E</color>
+    <color name="genie_selection_color">#F57E29</color>
     <color name="genie_chart_gradient_start">#D61A1A</color>
     <color name="genie_chart_gradient_end">#FFD769</color>
-    <color name="genie_chart_gray">#757575</color>
+    <color name="genie_chart_gray">#e0e0e0</color>
     <color name="genie_chart_limit_line">#088E8B</color>
 </resources>

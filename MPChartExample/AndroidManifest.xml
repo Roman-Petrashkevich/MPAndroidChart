@@ -57,7 +57,7 @@
         <activity android:name=".FilledLineActivity"></activity>
         <activity android:name=".HalfPieChartActivity"></activity>
         <activity android:name=".GenieSingleBarActivity"></activity>
-        <activity android:name=".GenieWeeklyBarActivity"></activity>
+        <activity android:name=".GenieMultiBarActivity"></activity>
     </application>
 
 </manifest>
