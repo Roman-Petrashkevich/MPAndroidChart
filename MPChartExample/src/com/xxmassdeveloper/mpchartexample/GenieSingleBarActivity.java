@@ -46,6 +46,7 @@ public class GenieSingleBarActivity extends DemoBase {
         mChart.setDrawAxisOnTopOfData(true);
         mChart.setClipToViewPortBottomEnabled(true);
         mChart.setViewPortOffsets(0f, 0f, 0f, 0f);
+        mChart.animateY(1000);
 
         YAxis leftAxis = mChart.getAxisLeft();
         leftAxis.setLabelCount(10, false);
@@ -66,9 +67,13 @@ public class GenieSingleBarActivity extends DemoBase {
             }
         });
 
-        LimitLine limitLine = new LimitLine(5000);
+        LimitLine limitLine = new LimitLine(5000, "Goal: 5000");
+        limitLine.setLabelPosition(LimitLine.LimitLabelPosition.IMAGE_CENTER);
         limitLine.setLineWidth(3);
         limitLine.setLineColor(ContextCompat.getColor(this, R.color.genie_chart_limit_line));
+        limitLine.setTextColor(ContextCompat.getColor(this, android.R.color.white));
+        limitLine.setTextSize(15);
+        limitLine.setImageRes(R.drawable.np_trophy_888734_000000);
         leftAxis.addLimitLine(limitLine);
 
         List<Integer> steps = new ArrayList<>();
