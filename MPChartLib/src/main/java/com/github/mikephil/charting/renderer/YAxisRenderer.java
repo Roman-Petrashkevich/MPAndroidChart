@@ -9,6 +9,7 @@ import android.graphics.Paint;
 import android.graphics.Paint.Align;
 import android.graphics.Path;
 import android.graphics.RectF;
+import android.text.TextPaint;
 
 import com.github.mikephil.charting.components.LimitLine;
 import com.github.mikephil.charting.components.YAxis;
@@ -301,7 +302,7 @@ public class YAxisRenderer extends AxisRenderer {
             // if drawing the limit-value label is enabled
             if (label != null && !label.equals("")) {
 
-                Paint textPaint = new Paint();
+                Paint textPaint = new Paint(TextPaint.ANTI_ALIAS_FLAG);
                 textPaint.setStyle(l.getTextStyle());
                 textPaint.setPathEffect(null);
                 textPaint.setColor(l.getTextColor());

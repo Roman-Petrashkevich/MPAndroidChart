@@ -1,5 +1,6 @@
 package com.xxmassdeveloper.mpchartexample;
 
+import android.graphics.Color;
 import android.graphics.Shader;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -8,7 +9,11 @@ import android.support.v4.content.res.ResourcesCompat;
 
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.AxisBase;
+import com.github.mikephil.charting.components.IMarker;
 import com.github.mikephil.charting.components.LimitLine;
+import com.github.mikephil.charting.components.MarkerImage;
+import com.github.mikephil.charting.components.MarkerText;
+import com.github.mikephil.charting.components.MarkerView;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
@@ -19,6 +24,7 @@ import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.github.mikephil.charting.utils.GradientColor;
 import com.xxmassdeveloper.mpchartexample.notimportant.DemoBase;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -42,6 +48,8 @@ public class GenieMultiBarActivity extends DemoBase {
     private static float CONST_GRID_LABEL_OFFSET_MULT = 0.5f;
 
     protected BarChart chart;
+
+    private DecimalFormat numberFormat = new DecimalFormat("###");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -143,6 +151,9 @@ public class GenieMultiBarActivity extends DemoBase {
     }
 
     private void setWeeklyData(List<Integer> steps) {
+        Typeface boldFont = ResourcesCompat.getFont(this, R.font.gilroy_bold);
+
+        // TODO: Remove these temporary placeholders
         final List<String> tmpWeekDays = new ArrayList<>();
         tmpWeekDays.add("Mon");
         tmpWeekDays.add("Tue");
@@ -151,6 +162,8 @@ public class GenieMultiBarActivity extends DemoBase {
         tmpWeekDays.add("Fri");
         tmpWeekDays.add("Sun");
         tmpWeekDays.add("Sat");
+        int selectionIdx = 6;
+
 
         XAxis xAxis = chart.getXAxis();
         xAxis.setLabelCount(8);
@@ -182,16 +195,14 @@ public class GenieMultiBarActivity extends DemoBase {
         } else {
             dataSet = new BarDataSet(yValues, getString(R.string.genie_poc_label_steps));
             dataSet.setDrawIcons(false);
+            dataSet.setColor(ContextCompat.getColor(this, R.color.genie_chart_gray));
 
-            List<GradientColor> gradients = new ArrayList<>();
-            gradients.add(
-                    new GradientColor(
-                            ContextCompat.getColor(this, R.color.genie_chart_gradient_start),
-                            ContextCompat.getColor(this, R.color.genie_chart_gradient_end),
-                            Shader.TileMode.CLAMP
-                    ));
-            dataSet.setUseGradients(true);
-            dataSet.setGradients(gradients);
+            dataSet.setHighLightAlpha(255);
+            dataSet.setHighLightGradient(new GradientColor(
+                    ContextCompat.getColor(this, R.color.genie_chart_gradient_start),
+                    ContextCompat.getColor(this, R.color.genie_chart_gradient_end),
+                    Shader.TileMode.CLAMP
+            ));
 
             ArrayList<IBarDataSet> dataSets = new ArrayList<>();
             dataSets.add(dataSet);
@@ -202,6 +213,15 @@ public class GenieMultiBarActivity extends DemoBase {
 
             chart.setData(data);
         }
+
+        // Highlight today's bar
+        MarkerText marker = new MarkerText(numberFormat.format(yValues.get(selectionIdx).getY()));
+        marker.setOffset(0, -15);
+        marker.setTextColor(ContextCompat.getColor(this, R.color.genie_selection_color));
+        marker.setTypeface(boldFont);
+        marker.setTextSize(CONST_FONT_SIZE);
+        chart.setMarker(marker);
+        chart.highlightValue(selectionIdx, 0, 0);
     }
 
 //    private void setMonthlyData(List<Integer> steps) {
