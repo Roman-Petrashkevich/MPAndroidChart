@@ -22,6 +22,12 @@ public class LimitLine extends ComponentBase {
     /** the width of the limit line */
     private float mLineWidth = 2f;
 
+    /** right side padding from the edge of the view port */
+    private float mPaddingRight = 0f;
+
+    /** left side padding from the edge of the view port */
+    private float mPaddingLeft = 0f;
+
     /** the color of the limit line */
     private int mLineColor = Color.rgb(237, 91, 91);
 
@@ -130,6 +136,42 @@ public class LimitLine extends ComponentBase {
         mDashPathEffect = new DashPathEffect(new float[] {
                 lineLength, spaceLength
         }, phase);
+    }
+
+    /**
+     * Returns the right side padding of the limit line from the edge of the view port
+     *
+     * @return
+     */
+    public float getPaddingRight() {
+        return mPaddingRight;
+    }
+
+    /**
+     * Sets the right side padding of the limit line from the edge of the view port
+     *
+     * @param padding
+     */
+    public void setPaddingRight(float padding) {
+        this.mPaddingRight = padding;
+    }
+
+    /**
+     * Returns the right side padding of the limit line from the edge of the view port
+     *
+     * @return
+     */
+    public float getPaddingLeft() {
+        return mPaddingLeft;
+    }
+
+    /**
+     * Sets the left side padding of the limit line from the edge of the view port
+     *
+     * @param padding
+     */
+    public void setPaddingLeft(float padding) {
+        this.mPaddingLeft = padding;
     }
 
     /**

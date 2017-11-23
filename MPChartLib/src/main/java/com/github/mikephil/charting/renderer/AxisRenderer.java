@@ -37,6 +37,11 @@ public abstract class AxisRenderer extends Renderer {
     protected Paint mAxisLabelPaint;
 
     /**
+     * paint for the x-label values that are highlighted
+     */
+    protected Paint mAxisHighLightLabelPaint;
+
+    /**
      * paint for the line surrounding the chart
      */
     protected Paint mAxisLinePaint;

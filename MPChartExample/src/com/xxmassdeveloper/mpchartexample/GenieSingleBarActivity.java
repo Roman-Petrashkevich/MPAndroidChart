@@ -57,6 +57,8 @@ public class GenieSingleBarActivity extends DemoBase {
         chart = findViewById(R.id.chart);
 
         initViews();
+
+        setData(PARAM_STEPS);
     }
 
     private void initViews() {
@@ -115,8 +117,6 @@ public class GenieSingleBarActivity extends DemoBase {
         limitLine.setTextSize(CONST_FONT_SIZE);
         limitLine.setImageRes(R.drawable.np_trophy_888734_000000);
         leftAxis.addLimitLine(limitLine);
-
-        setData(PARAM_STEPS);
     }
 
     private void setData(int steps) {

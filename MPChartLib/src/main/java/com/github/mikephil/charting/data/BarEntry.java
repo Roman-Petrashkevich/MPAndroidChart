@@ -34,6 +34,11 @@ public class BarEntry extends Entry {
     private float mPositiveSum;
 
     /**
+     * bar smaller than this yValue will be render as if they actually had this value for Y
+     */
+    private float mMinYValue = 0f;
+
+    /**
      * Constructor for normal bars (not stacked).
      *
      * @param x
@@ -138,6 +143,18 @@ public class BarEntry extends Entry {
     }
 
     /**
+     * Constructor for normal bars with minimal value limit
+     *
+     * @param x
+     * @param y
+     * @param mMinYValue
+     */
+    public BarEntry(float x, float y, float mMinYValue) {
+        super(x, y);
+        this.mMinYValue = mMinYValue;
+    }
+
+    /**
      * Returns an exact copy of the BarEntry.
      */
     public BarEntry copy() {
@@ -171,12 +188,13 @@ public class BarEntry extends Entry {
 
     /**
      * Returns the value of this BarEntry. If the entry is stacked, it returns the positive sum of all values.
+     * If the value is less than minYValue, it returns a minYValue instead.
      *
      * @return
      */
     @Override
     public float getY() {
-        return super.getY();
+        return super.getY() > mMinYValue ? super.getY() : mMinYValue;
     }
 
     /**
@@ -237,6 +255,25 @@ public class BarEntry extends Entry {
      */
     public float getNegativeSum() {
         return mNegativeSum;
+    }
+
+    /**
+     * Returns the minimal Y value to be rendered on screen
+     *
+     * @return
+     */
+    public float getMinYValue() {
+        return mMinYValue;
+    }
+
+    /**
+     * Sets the minimal visualised Y value for this entry.
+     * If the value is less than this the bar will be rendered with minimal value as Y
+     *
+     * @param value
+     */
+    public void setMinYValue(float value) {
+        this.mMinYValue = value;
     }
 
     private void calcPosNegSum() {

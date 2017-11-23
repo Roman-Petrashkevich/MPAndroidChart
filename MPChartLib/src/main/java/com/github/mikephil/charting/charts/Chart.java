@@ -640,6 +640,7 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
             e = mData.getEntryForHighlight(high);
             if (e == null) {
                 mIndicesToHighlight = null;
+                mXAxis.setHighLightEntries(new float[]{});
                 high = null;
             } else {
 
@@ -647,6 +648,9 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
                 mIndicesToHighlight = new Highlight[]{
                         high
                 };
+
+                float[] highLightEntries = new float[]{e.getX()};
+                mXAxis.setHighLightEntries(highLightEntries);
             }
         }
 

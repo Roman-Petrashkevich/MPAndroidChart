@@ -32,10 +32,17 @@ public abstract class AxisBase extends ComponentBase {
 
     private float mAxisLineWidth = 1f;
 
+    private int mHighLightColor = 0;
+
     /**
      * the actual array of entries
      */
     public float[] mEntries = new float[]{};
+
+    /**
+     * the actual array of entries that should be highlighted
+     */
+    public float[] mHighLightEntries = new float[]{};
 
     /**
      * axis label entries only used for centered labels
@@ -225,6 +232,44 @@ public abstract class AxisBase extends ComponentBase {
      */
     public int getGridColor() {
         return mGridColor;
+    }
+
+    /**
+     * Returns the color to be used on highlighted axis labels.
+     * Returns 0 if no color has been set
+     *
+     * @return
+     */
+    public int getHighLightColor() {
+        return mHighLightColor;
+    }
+
+    /**
+     * Sets the color to be used on highlighted axis labels.
+     * Set to 0 if you wish for no highlight color to be shown.
+     *
+     * @param color
+     */
+    public void setHighLightColor(int color) {
+        this.mHighLightColor = color;
+    }
+
+    /**
+     * Returns the entries that are supposed to be highlighted
+     *
+     * @return
+     */
+    public float[] getHighLightEntries() {
+        return mHighLightEntries;
+    }
+
+    /**
+     * Sets the entries which labels need to be highlighted
+     *
+     * @param entries
+     */
+    public void setHighLightEntries(float[] entries) {
+        this.mHighLightEntries = entries;
     }
 
     /**

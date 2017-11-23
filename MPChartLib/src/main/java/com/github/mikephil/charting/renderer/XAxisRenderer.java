@@ -113,6 +113,10 @@ public class XAxisRenderer extends AxisRenderer {
         mAxisLabelPaint.setTypeface(mXAxis.getTypeface());
         mAxisLabelPaint.setTextSize(mXAxis.getTextSize());
         mAxisLabelPaint.setColor(mXAxis.getTextColor());
+        mAxisHighLightLabelPaint = new Paint(mAxisLabelPaint);
+        if (mXAxis.getHighLightColor() != 0) {
+            mAxisHighLightLabelPaint.setColor(mAxis.getHighLightColor());
+        }
 
         MPPointF pointF = MPPointF.getInstance(0,0);
         if (mXAxis.getPosition() == XAxisPosition.TOP) {
@@ -200,6 +204,7 @@ public class XAxisRenderer extends AxisRenderer {
         for (int i = 0; i < positions.length; i += 2) {
 
             float x = positions[i];
+            float entry = centeringEnabled ? mAxis.mCenteredEntries[i/2] : mAxis.mEntries[i/2];
 
             if (mViewPortHandler.isInBoundsX(x)) {
 
@@ -223,13 +228,18 @@ public class XAxisRenderer extends AxisRenderer {
                     }
                 }
 
-                drawLabel(c, label, x, pos, anchor, labelRotationAngleDegrees);
+                boolean isHighlighted = Utils.contains(mXAxis.getHighLightEntries(), entry);
+                drawLabel(c, label, isHighlighted, x, pos, anchor, labelRotationAngleDegrees);
             }
         }
     }
 
-    protected void drawLabel(Canvas c, String formattedLabel, float x, float y, MPPointF anchor, float angleDegrees) {
-        Utils.drawXAxisValue(c, formattedLabel, x, y, mAxisLabelPaint, anchor, angleDegrees);
+    protected void drawLabel(Canvas c, String formattedLabel, boolean isHighLighted, float x, float y, MPPointF anchor, float angleDegrees) {
+        if (isHighLighted) {
+            Utils.drawXAxisValue(c, formattedLabel, x, y, mAxisHighLightLabelPaint, anchor, angleDegrees);
+        } else {
+            Utils.drawXAxisValue(c, formattedLabel, x, y, mAxisLabelPaint, anchor, angleDegrees);
+        }
     }
     protected Path mRenderGridLinesPath = new Path();
     protected float[] mRenderGridLinesBuffer = new float[2];

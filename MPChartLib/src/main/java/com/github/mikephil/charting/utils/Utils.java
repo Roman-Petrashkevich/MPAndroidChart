@@ -776,4 +776,20 @@ public abstract class Utils {
     public static int getSDKInt() {
         return android.os.Build.VERSION.SDK_INT;
     }
+
+    /**
+     * Checks if array contains a given item
+     *
+     * @param array
+     * @param item
+     * @return
+     */
+    public static boolean contains(float[] array, float item) {
+        for (float n : array) {
+            if (item == n) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

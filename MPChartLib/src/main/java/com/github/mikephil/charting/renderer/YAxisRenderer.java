@@ -272,6 +272,7 @@ public class YAxisRenderer extends AxisRenderer {
         for (int i = 0; i < limitLines.size(); i++) {
 
             LimitLine l = limitLines.get(i);
+            final LimitLine.LimitLabelPosition position = l.getLabelPosition();
 
             if (!l.isEnabled())
                 continue;
@@ -290,8 +291,8 @@ public class YAxisRenderer extends AxisRenderer {
 
             mTrans.pointValuesToPixel(pts);
 
-            limitLinePath.moveTo(mViewPortHandler.contentLeft(), pts[1]);
-            limitLinePath.lineTo(mViewPortHandler.contentRight(), pts[1]);
+            limitLinePath.moveTo(mViewPortHandler.contentLeft() + l.getPaddingLeft(), pts[1]);
+            limitLinePath.lineTo(mViewPortHandler.contentRight() - l.getPaddingRight(), pts[1]);
 
             c.drawPath(limitLinePath, mLimitLinePaint);
             limitLinePath.reset();
@@ -314,8 +315,6 @@ public class YAxisRenderer extends AxisRenderer {
                 final float labelLineHeight = Utils.calcTextHeight(mLimitLinePaint, label);
                 float xOffset = Utils.convertDpToPixel(4f) + l.getXOffset();
                 float yOffset = l.getLineWidth() + labelLineHeight + l.getYOffset();
-
-                final LimitLine.LimitLabelPosition position = l.getLabelPosition();
 
                 if (position == LimitLine.LimitLabelPosition.RIGHT_TOP) {
 
@@ -382,7 +381,35 @@ public class YAxisRenderer extends AxisRenderer {
 
                 } else if (position == LimitLine.LimitLabelPosition.IMAGE_RIGHT) {
 
-                    // TODO: Draw label on the right below image in the circular frame
+                    Bitmap bitmap = BitmapFactory.decodeResource(
+                            context.getResources(),
+                            l.getImageRes());
+
+                    float screenWidth = mViewPortHandler.contentRight() -
+                            mViewPortHandler.contentLeft() -
+                            mViewPortHandler.offsetLeft() -
+                            mViewPortHandler.offsetRight();
+                    float textWidth = textPaint.measureText(label);
+                    float textHeight = textPaint.getTextSize();
+                    float bitmapWidth = bitmap != null ? bitmap.getWidth() : 0;
+                    float bitmapHeight = bitmap != null ? bitmap.getHeight() : 0;
+                    float circleRadius = Math.max(bitmapHeight, bitmapWidth/2);
+                    float padding = l.getPaddingRight();
+
+                    float rightBorder = screenWidth - padding;
+                    float centerOfCircle = rightBorder - circleRadius;
+
+                    c.drawCircle(centerOfCircle, pts[1], circleRadius, mLimitLinePaint);
+
+                    if (bitmap != null) {
+                        c.drawBitmap(bitmap,
+                                centerOfCircle - bitmapWidth/2,
+                                pts[1] - bitmapHeight/2, mLimitLinePaint);
+                    }
+
+                    c.drawText(label,
+                            centerOfCircle - textWidth/2,
+                            pts[1] + circleRadius + textHeight, textPaint);
                 }
             }
 
