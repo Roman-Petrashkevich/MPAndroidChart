@@ -78,11 +78,12 @@ public class GenieSingleBarActivity extends DemoBase {
         chart.getAxisLeft().setDrawLabels(true);
         chart.setDrawAxisOnTopOfData(true);
         chart.setClipToViewPortBottomEnabled(true);
-        chart.setViewPortOffsets(0f, 0f, 0f, 0f);
+        chart.setMinOffset(0);
         chart.animateY(CONST_ANIMATION_TIME);
 
         YAxis leftAxis = chart.getAxisLeft();
         leftAxis.setLabelCount(labelsCount, false);
+        leftAxis.setDrawAxisLine(false);
         leftAxis.setPosition(YAxis.YAxisLabelPosition.INSIDE_CHART);
         leftAxis.setAxisMaximum(yAxisMax);
         leftAxis.setAxisMinimum(yAxisMin);

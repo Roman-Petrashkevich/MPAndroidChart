@@ -34,7 +34,7 @@ public class GenieMultiBarActivity extends DemoBase {
 
     private int PARAM_GOAL = 5000;
 
-    private static float CONST_VIEW_PORT_OFFSET = 50f;
+    private static float CONST_VIEW_PORT_OFFSET = 15f;
     private static float CONST_UPPER_BOUND_MULT = 2f;
     private static float CONST_LOWER_BOUND_MULT = -0.1f;
     private static float CONST_FONT_SIZE_STEPS = 15;
@@ -44,8 +44,12 @@ public class GenieMultiBarActivity extends DemoBase {
     private static float CONST_MARKER_OFFSET = -15;
     private static float CONST_FONT_SIZE = 12;
     private static float CONST_BAR_WIDTH = 0.5f;
-    private static int   CONST_WEEKLY_LABELS_COUNT = 7;
+    private static int   CONST_WEEK_LENGTH = 7;
     private static float CONST_MIN_BAR_HEIGHT_MULT = 0.01f;
+    private static float CONST_SPACE_WEEKLY_MIN = 0.7f;
+    private static float CONST_SPACE_WEEKLY_MAX = 1.7f;
+    private static int   CONST_SPACE_MONTHLY_MIN = 2;
+    private static int   CONST_SPACE_MONTHLY_MAX = 5;
 
     protected BarChart chart;
 
@@ -60,15 +64,22 @@ public class GenieMultiBarActivity extends DemoBase {
 
         initViews();
 
-        List<Integer> steps = new ArrayList<>();
-        steps.add(5672);
-        steps.add(3000);
-        steps.add(8000);
-        steps.add(9500);
-        steps.add(5000);
-        steps.add(0);
-        steps.add(0);
-        setWeeklyData(steps);
+        List<Integer> weeklySteps = new ArrayList<>();
+        weeklySteps.add(5672);
+        weeklySteps.add(3000);
+        weeklySteps.add(8000);
+        weeklySteps.add(9500);
+        weeklySteps.add(5000);
+        weeklySteps.add(0);
+        weeklySteps.add(0);
+
+        List<Integer> monthlySteps = new ArrayList<>();
+        for(int i = 0; i < 31; i++) {
+            monthlySteps.add((int)(Math.random() * 10000));
+        }
+
+        setWeeklyData(weeklySteps);
+//        setMonthlyData(monthlySteps);
     }
 
     private void initViews() {
@@ -84,16 +95,20 @@ public class GenieMultiBarActivity extends DemoBase {
         chart.getDescription().setEnabled(false);
         chart.getLegend().setEnabled(false);
         chart.setDrawGridBackground(false);
+        chart.setDrawBorders(false);
         chart.setDrawMarkers(true);
         chart.getXAxis().setDrawLabels(true);
         chart.getAxisLeft().setDrawLabels(true);
         chart.getAxisRight().setDrawLabels(true);
         chart.setDrawAxisOnTopOfData(true);
-        chart.setViewPortOffsets(0f, CONST_VIEW_PORT_OFFSET, 0f, CONST_VIEW_PORT_OFFSET);
+        chart.setExtraOffsets(0, CONST_VIEW_PORT_OFFSET, 0, CONST_VIEW_PORT_OFFSET);
+        chart.setMinOffset(0);
 
         XAxis xAxis = chart.getXAxis();
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
         xAxis.setDrawGridLines(false);
+        xAxis.setSpaceMin(CONST_SPACE_WEEKLY_MIN);
+        xAxis.setSpaceMax(CONST_SPACE_WEEKLY_MAX);
         xAxis.setAxisLineWidth(CONST_LINE_WIDTH);
         xAxis.setTypeface(boldFont);
         xAxis.setTextSize(CONST_FONT_SIZE);
@@ -102,6 +117,7 @@ public class GenieMultiBarActivity extends DemoBase {
 
         YAxis leftAxis = chart.getAxisLeft();
         leftAxis.setLabelCount(2, true);
+        leftAxis.setDrawAxisLine(false);
         leftAxis.setAxisMinimum(yAxisMin);
         leftAxis.setAxisMaximum(yAxisMax);
         leftAxis.setGridLineWidth(CONST_LINE_WIDTH);
@@ -109,6 +125,7 @@ public class GenieMultiBarActivity extends DemoBase {
 
         YAxis rightAxis = chart.getAxisRight();
         rightAxis.setLabelCount(labelsCount, false);
+        rightAxis.setDrawAxisLine(false);
         rightAxis.setPosition(YAxis.YAxisLabelPosition.INSIDE_CHART);
         rightAxis.setAxisMinimum(yAxisMin);
         rightAxis.setAxisMaximum(yAxisMax);
@@ -158,7 +175,7 @@ public class GenieMultiBarActivity extends DemoBase {
 
 
         XAxis xAxis = chart.getXAxis();
-        xAxis.setLabelCount(CONST_WEEKLY_LABELS_COUNT);
+        xAxis.setLabelCount(CONST_WEEK_LENGTH);
         xAxis.setValueFormatter(new IAxisValueFormatter() {
             @Override
             public String getFormattedValue(float value, AxisBase axis) {
@@ -172,8 +189,6 @@ public class GenieMultiBarActivity extends DemoBase {
         for (int i = 0; i < steps.size(); i++) {
             yValues.add(new BarEntry(i, (float)steps.get(i), minYValue));
         }
-        // Add an empty BarEntry for spacing on the right
-        yValues.add(new BarEntry(CONST_WEEKLY_LABELS_COUNT, 0));
 
         BarDataSet dataSet;
 
@@ -219,67 +234,57 @@ public class GenieMultiBarActivity extends DemoBase {
         chart.highlightValue(index, 0, 0);
     }
 
-//    private void setMonthlyData(List<Integer> steps) {
-//        final List<String> tmpWeekDays = new ArrayList<>();
-//        tmpWeekDays.add("Mon");
-//        tmpWeekDays.add("Tue");
-//        tmpWeekDays.add("Wed");
-//        tmpWeekDays.add("Thurs");
-//        tmpWeekDays.add("Fri");
-//        tmpWeekDays.add("Sun");
-//        tmpWeekDays.add("Sat");
-//
-//        XAxis xAxis = chart.getXAxis();
-//        xAxis.setLabelCount(8);
-//        xAxis.setValueFormatter(new IAxisValueFormatter() {
-//            @Override
-//            public String getFormattedValue(float value, AxisBase axis) {
-//                int day = (int)value;
-//                return day < tmpWeekDays.size() ? tmpWeekDays.get((int)value) : "";
-//            }
-//        });
-//
-//        ArrayList<BarEntry> yValues = new ArrayList<>();
-//        for (int i = 0; i < 8; i++) {
-//            if (i < steps.size()) {
-//                yValues.add(new BarEntry(i, steps.get(i)));
-//            } else {
-//                // Add empty bars in case weekly data is incomplete
-//                yValues.add(new BarEntry(i, 0));
-//            }
-//        }
-//
-//        BarDataSet dataSet;
-//
-//        if (chart.getData() != null && chart.getData().getDataSetCount() > 0) {
-//            dataSet = (BarDataSet) chart.getData().getDataSetByIndex(0);
-//            dataSet.setValues(yValues);
-//            chart.getData().notifyDataChanged();
-//            chart.notifyDataSetChanged();
-//        } else {
-//            dataSet = new BarDataSet(yValues, getString(R.string.genie_poc_label_steps));
-//            dataSet.setDrawIcons(false);
-//
-//            List<GradientColor> gradients = new ArrayList<>();
-//            gradients.add(
-//                    new GradientColor(
-//                            ContextCompat.getColor(this, R.color.genie_chart_gradient_start),
-//                            ContextCompat.getColor(this, R.color.genie_chart_gradient_end),
-//                            Shader.TileMode.CLAMP
-//                    ));
-//            dataSet.setUseGradients(true);
-//            dataSet.setGradients(gradients);
-//
-//            ArrayList<IBarDataSet> dataSets = new ArrayList<>();
-//            dataSets.add(dataSet);
-//
-//            BarData data = new BarData(dataSets);
-//            data.setDrawValues(false);
-//            data.setBarWidth(0.5f);
-//
-//            chart.setData(data);
-//        }
-//    }
+    private void setMonthlyData(final List<Integer> steps) {
+        XAxis xAxis = chart.getXAxis();
+        xAxis.setSpaceMin(CONST_SPACE_MONTHLY_MIN);
+        xAxis.setSpaceMax(CONST_SPACE_MONTHLY_MAX);
+        xAxis.setLabelCount(steps.size() + CONST_SPACE_MONTHLY_MIN + CONST_SPACE_MONTHLY_MAX);
+        xAxis.setValueFormatter(new IAxisValueFormatter() {
+            @Override
+            public String getFormattedValue(float value, AxisBase axis) {
+                int day = (int)value + 1;
+                // TODO: Check Mondays properly
+                return ((day+4)%CONST_WEEK_LENGTH == 0) && value <= steps.size() ? String.valueOf(day) : "";
+            }
+        });
+
+        final float minYValue = PARAM_GOAL * CONST_UPPER_BOUND_MULT * CONST_MIN_BAR_HEIGHT_MULT;
+        ArrayList<BarEntry> yValues = new ArrayList<>();
+        for (int i = 0; i < steps.size(); i++) {
+            yValues.add(new BarEntry(i, (float)steps.get(i), minYValue));
+        }
+
+        BarDataSet dataSet;
+
+        if (chart.getData() != null && chart.getData().getDataSetCount() > 0) {
+            dataSet = (BarDataSet) chart.getData().getDataSetByIndex(0);
+            dataSet.setValues(yValues);
+            chart.getData().notifyDataChanged();
+            chart.notifyDataSetChanged();
+        } else {
+            dataSet = new BarDataSet(yValues, getString(R.string.genie_poc_label_steps));
+            dataSet.setDrawIcons(false);
+
+            List<GradientColor> gradients = new ArrayList<>();
+            gradients.add(
+                    new GradientColor(
+                            ContextCompat.getColor(this, R.color.genie_chart_gradient_start),
+                            ContextCompat.getColor(this, R.color.genie_chart_gradient_end),
+                            Shader.TileMode.CLAMP
+                    ));
+            dataSet.setUseGradients(true);
+            dataSet.setGradients(gradients);
+
+            ArrayList<IBarDataSet> dataSets = new ArrayList<>();
+            dataSets.add(dataSet);
+
+            BarData data = new BarData(dataSets);
+            data.setDrawValues(false);
+            data.setBarWidth(0.5f);
+
+            chart.setData(data);
+        }
+    }
 
     private String formatAxisLabels(float number) {
         int thousands = (int)number/1000;
