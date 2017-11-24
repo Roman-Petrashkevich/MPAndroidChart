@@ -482,7 +482,7 @@ public class BarChartRenderer extends BarLineScatterCandleBubbleRenderer {
             GradientColor highLightGradient = set.getHighLightGradient();
             if (highLightGradient != null) {
                 mHighlightPaint.setShader(
-                        new LinearGradient(mBarRect.left, mBarRect.top, mBarRect.right, mBarRect.bottom,
+                        new LinearGradient(mBarRect.left, mBarRect.top, mBarRect.left, mBarRect.bottom,
                                 highLightGradient.getEndColor(),
                                 highLightGradient.getStartColor(),
                                 highLightGradient.getTileMode()));
