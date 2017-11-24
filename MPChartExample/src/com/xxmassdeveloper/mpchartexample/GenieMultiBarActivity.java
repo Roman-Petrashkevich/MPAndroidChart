@@ -34,9 +34,17 @@ public class GenieMultiBarActivity extends DemoBase {
 
     private int PARAM_GOAL = 5000;
 
-    private static float CONST_VIEW_PORT_OFFSET = 15f;
-    private static float CONST_UPPER_BOUND_MULT = 2f;
-    private static float CONST_LOWER_BOUND_MULT = -0.1f;
+    private static float CONST_VIEW_PORT_OFFSET_TOP = 15f;
+    private static float CONST_VIEW_PORT_OFFSET_BOTTOM = 30f;
+
+    private static float CONST_AXIS_MAX_MULTIPLIER = 1.05f;
+    private static float CONST_AXIS_MIN_MULTIPLIER = -0.05f;
+    private static float CONST_AXIS_MAX_LABEL_MULTIPLIER = 0.95f;
+    private static int   CONST_AXIS_MAX_NUMBER_OF_LABELS = 50;
+
+    private static float CONST_GRANULARITY = 1000f;
+    private static float CONST_MIN_RANGE = 10000f;
+
     private static float CONST_FONT_SIZE_STEPS = 15;
     private static float CONST_LINE_WIDTH = 2;
     private static float CONST_LINE_PADDING = 20;
@@ -68,9 +76,9 @@ public class GenieMultiBarActivity extends DemoBase {
         weeklySteps.add(5672);
         weeklySteps.add(3000);
         weeklySteps.add(8000);
-        weeklySteps.add(9500);
+        weeklySteps.add(9999);
         weeklySteps.add(5000);
-        weeklySteps.add(0);
+        weeklySteps.add(5000);
         weeklySteps.add(0);
 
         List<Integer> monthlySteps = new ArrayList<>();
@@ -78,16 +86,12 @@ public class GenieMultiBarActivity extends DemoBase {
             monthlySteps.add((int)(Math.random() * 10000));
         }
 
-//        setWeeklyData(weeklySteps);
-        setMonthlyData(monthlySteps);
+        setWeeklyData(weeklySteps);
+//        setMonthlyData(monthlySteps);
     }
 
     private void initViews() {
         Typeface boldFont = ResourcesCompat.getFont(this, R.font.gilroy_bold);
-        final float yAxisMax = PARAM_GOAL * CONST_UPPER_BOUND_MULT;
-        final float yAxisMin = PARAM_GOAL * CONST_LOWER_BOUND_MULT;
-        final float granularity = Math.abs(yAxisMin);
-        int labelsCount = (int)(yAxisMax / granularity);
 
         chart.setDrawBarShadow(false);
         chart.setDrawValueAboveBar(false);
@@ -101,7 +105,7 @@ public class GenieMultiBarActivity extends DemoBase {
         chart.getAxisLeft().setDrawLabels(true);
         chart.getAxisRight().setDrawLabels(true);
         chart.setDrawAxisOnTopOfData(true);
-        chart.setExtraOffsets(0, CONST_VIEW_PORT_OFFSET, 0, CONST_VIEW_PORT_OFFSET);
+        chart.setExtraOffsets(0, CONST_VIEW_PORT_OFFSET_TOP, 0, CONST_VIEW_PORT_OFFSET_BOTTOM);
         chart.setMinOffset(0);
 
         XAxis xAxis = chart.getXAxis();
@@ -118,18 +122,14 @@ public class GenieMultiBarActivity extends DemoBase {
         YAxis leftAxis = chart.getAxisLeft();
         leftAxis.setLabelCount(2, true);
         leftAxis.setDrawAxisLine(false);
-        leftAxis.setAxisMinimum(yAxisMin);
-        leftAxis.setAxisMaximum(yAxisMax);
         leftAxis.setGridLineWidth(CONST_LINE_WIDTH);
         leftAxis.setDrawLabels(false);
 
-        YAxis rightAxis = chart.getAxisRight();
-        rightAxis.setLabelCount(labelsCount, false);
+        final YAxis rightAxis = chart.getAxisRight();
+        rightAxis.setLabelCount(CONST_AXIS_MAX_NUMBER_OF_LABELS, false);
         rightAxis.setDrawAxisLine(false);
         rightAxis.setPosition(YAxis.YAxisLabelPosition.INSIDE_CHART);
-        rightAxis.setAxisMinimum(yAxisMin);
-        rightAxis.setAxisMaximum(yAxisMax);
-        rightAxis.setGranularity(granularity);
+        rightAxis.setGranularity(CONST_GRANULARITY);
         rightAxis.setXOffset(CONST_OFFSET);
         rightAxis.setYOffset(0);
         rightAxis.setDrawGridLines(false);
@@ -137,13 +137,16 @@ public class GenieMultiBarActivity extends DemoBase {
         rightAxis.setTextSize(CONST_FONT_SIZE);
         rightAxis.setTextColor(Color.WHITE);
         rightAxis.setValueFormatter(new IAxisValueFormatter() {
+
             @Override
             public String getFormattedValue(float value, AxisBase axis) {
-                boolean isFirstLabel = value == 0;
-                boolean isLastLabel = value == yAxisMax;
-                boolean isPreLastLabel = !isLastLabel && value + 2 * granularity > yAxisMax;
+                float maxValueThreshold = axis.getAxisMaximum() * CONST_AXIS_MAX_LABEL_MULTIPLIER;
 
-                return isFirstLabel ? "0" : isPreLastLabel ? formatAxisLabels(yAxisMax) : "";
+                boolean isFirstLabel = value == 0;
+                boolean isLastLabel = maxValueThreshold < value &&
+                        value - CONST_GRANULARITY < maxValueThreshold;
+
+                return isFirstLabel ? "0" : isLastLabel ? formatAxisLabels(value) : "";
             }
         });
 
@@ -173,6 +176,15 @@ public class GenieMultiBarActivity extends DemoBase {
         int selectionIdx = 5;
         // ----------------------------------------------------
 
+        float axisMax = getAxisMax(steps, CONST_GRANULARITY, CONST_MIN_RANGE);
+        float axisMin = getAxisMin(axisMax);
+
+        YAxis rightAxis = chart.getAxisRight();
+        rightAxis.setAxisMaximum(axisMax);
+        rightAxis.setAxisMinimum(axisMin);
+        YAxis leftAxis = chart.getAxisLeft();
+        leftAxis.setAxisMaximum(axisMax);
+        leftAxis.setAxisMinimum(axisMin);
 
         XAxis xAxis = chart.getXAxis();
         xAxis.setLabelCount(CONST_WEEK_LENGTH);
@@ -184,7 +196,7 @@ public class GenieMultiBarActivity extends DemoBase {
             }
         });
 
-        final float minYValue = PARAM_GOAL * CONST_UPPER_BOUND_MULT * CONST_MIN_BAR_HEIGHT_MULT;
+        final float minYValue = axisMax * CONST_MIN_BAR_HEIGHT_MULT;
         ArrayList<BarEntry> yValues = new ArrayList<>();
         for (int i = 0; i < steps.size(); i++) {
             yValues.add(new BarEntry(i, (float)steps.get(i), minYValue));
@@ -235,6 +247,16 @@ public class GenieMultiBarActivity extends DemoBase {
     }
 
     private void setMonthlyData(final List<Integer> steps) {
+        float axisMax = getAxisMax(steps, CONST_GRANULARITY, CONST_MIN_RANGE);
+        float axisMin = getAxisMin(axisMax);
+
+        YAxis rightAxis = chart.getAxisRight();
+        rightAxis.setAxisMaximum(axisMax);
+        rightAxis.setAxisMinimum(axisMin);
+        YAxis leftAxis = chart.getAxisLeft();
+        leftAxis.setAxisMaximum(axisMax);
+        leftAxis.setAxisMinimum(axisMin);
+
         XAxis xAxis = chart.getXAxis();
         xAxis.setSpaceMin(CONST_SPACE_MONTHLY_MIN);
         xAxis.setSpaceMax(CONST_SPACE_MONTHLY_MAX);
@@ -248,7 +270,7 @@ public class GenieMultiBarActivity extends DemoBase {
             }
         });
 
-        final float minYValue = PARAM_GOAL * CONST_UPPER_BOUND_MULT * CONST_MIN_BAR_HEIGHT_MULT;
+        final float minYValue = axisMax * CONST_MIN_BAR_HEIGHT_MULT;
         ArrayList<BarEntry> yValues = new ArrayList<>();
         for (int i = 0; i < steps.size(); i++) {
             yValues.add(new BarEntry(i, (float)steps.get(i), minYValue));
@@ -289,6 +311,21 @@ public class GenieMultiBarActivity extends DemoBase {
     private String formatAxisLabels(float number) {
         int thousands = (int)number/1000;
         return thousands > 0 ? String.valueOf(thousands) + "K" : "0";
+    }
+
+    private int getAxisMax(List<Integer> data, float granularity, float minRange) {
+        int max = 0;
+        for (Integer item : data) {
+            if (item > max) {
+                max = item;
+            }
+        }
+        float roundedMax = (int)((max / (int)granularity + 1) * granularity);
+        return (int) (Math.max(roundedMax, minRange) * CONST_AXIS_MAX_MULTIPLIER);
+    }
+
+    private float getAxisMin(float axisMax) {
+        return axisMax * CONST_AXIS_MIN_MULTIPLIER;
     }
 
 }
