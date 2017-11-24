@@ -630,8 +630,10 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
 
         Entry e = null;
 
-        if (high == null)
+        if (high == null) {
             mIndicesToHighlight = null;
+            this.mXAxis.setHighLightEntries(new float[0]);
+        }
         else {
 
             if (mLogEnabled)

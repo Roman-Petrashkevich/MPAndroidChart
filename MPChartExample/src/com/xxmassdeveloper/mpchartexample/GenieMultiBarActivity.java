@@ -78,8 +78,8 @@ public class GenieMultiBarActivity extends DemoBase {
             monthlySteps.add((int)(Math.random() * 10000));
         }
 
-        setWeeklyData(weeklySteps);
-//        setMonthlyData(monthlySteps);
+//        setWeeklyData(weeklySteps);
+        setMonthlyData(monthlySteps);
     }
 
     private void initViews() {
